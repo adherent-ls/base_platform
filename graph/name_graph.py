@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Union
 
 from ..base_graph import BaseGraph
 from ..instance.name_param_instance import InputInstance, OutputInstance, FilterInstance
@@ -29,18 +29,20 @@ class NameGraph(BaseGraph):
 class SeriesWithNameGraph(BaseGraph):
     def __init__(
             self,
-            ini: InputInstance,
-            funcs: List[Tuple[
-                BaseGraph,
-                Optional[InputInstance],
-                Optional[OutputInstance],
-                Optional[FilterInstance]
+            ini: InputInstance.types,
+            funcs: List[Union[
+                Tuple[BaseGraph, InputInstance.types, OutputInstance.types],
+                Tuple[BaseGraph, InputInstance.types, OutputInstance.types, FilterInstance.types],
             ]]
     ):
         super().__init__()
         self.ini = ini
         for idx, item in enumerate(funcs):
-            self.modules[str(idx)] = NameGraph(*item)
+            func, ini, oui, fii = item
+            ini = InputInstance(ini)
+            oui = OutputInstance(oui)
+            fii = FilterInstance(fii)
+            self.modules[str(idx)] = NameGraph(func, ini, oui, fii)
 
     def forward(self, *data: List):
         data_dict = self.ini.data_format(data)

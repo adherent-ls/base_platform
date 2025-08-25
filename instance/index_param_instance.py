@@ -16,7 +16,11 @@ class FilterType(Enum):
 
 
 class InputInstance(BaseInstance):
-    indices: List[Union[int, UseField]] = []
+    types = List[Union[int, UseField]]
+
+    def __init__(self, indices: types = ()):
+        super().__init__()
+        self.indices = indices
 
     def data_format(self, data):
         return [data[index] for index in self.indices]
@@ -37,7 +41,11 @@ class InputInstance(BaseInstance):
 
 
 class OutputInstance(BaseInstance):
-    indices: Union[int, List[int]] = []
+    types = Union[int, List[int]]
+
+    def __init__(self, indices: types = ()):
+        super().__init__()
+        self.indices = indices
 
     def update_data(self, result, func_output):
         if isinstance(self.indices, int):
@@ -51,7 +59,11 @@ class OutputInstance(BaseInstance):
 
 
 class FilterInstance(BaseInstance):
-    indices: Union[FilterType, List[int]] = FilterType.All
+    types = Union[FilterType, List[int]]
+
+    def __init__(self, indices: types = FilterType.All):
+        super().__init__()
+        self.indices = indices
 
     def filter_data(self, data):
         if self.indices == FilterType.All:

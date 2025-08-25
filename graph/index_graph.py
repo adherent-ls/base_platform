@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Union
 
 from ..base_graph import BaseGraph
 from ..instance.index_param_instance import InputInstance, OutputInstance, FilterInstance
@@ -29,18 +29,20 @@ class IndexGraph(BaseGraph):
 class SeriesWithIndexGraph(BaseGraph):
     def __init__(
             self,
-            ini: InputInstance,
-            funcs: List[Tuple[
-                BaseGraph,
-                Optional[InputInstance],
-                Optional[OutputInstance],
-                Optional[FilterInstance]
+            ini: InputInstance.types,
+            funcs: List[Union[
+                Tuple[BaseGraph, InputInstance.types, OutputInstance.types],
+                Tuple[BaseGraph, InputInstance.types, OutputInstance.types, FilterInstance.types],
             ]]
     ):
         super().__init__()
         self.ini = ini
         for idx, item in enumerate(funcs):
-            self.modules[str(idx)] = IndexGraph(*item)
+            func, ini, oui, fii = item
+            ini = InputInstance(ini)
+            oui = OutputInstance(oui)
+            fii = FilterInstance(fii)
+            self.modules[str(idx)] = IndexGraph(func, ini, oui, fii)
 
     def forward(self, *data: List):
         data = self.ini.data_format(data)
