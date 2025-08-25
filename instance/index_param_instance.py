@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Union
 
-from base_instance import BaseInstance
+from ..base_instance import BaseInstance
 
 
 class UseField(object):

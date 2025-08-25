@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple, Optional
 
-from base_graph import BaseGraph
-from instance.name_param_instance import InputInstance, OutputInstance, FilterInstance
+from ..base_graph import BaseGraph
+from ..instance.name_param_instance import InputInstance, OutputInstance, FilterInstance
 
 
 class NameGraph(BaseGraph):

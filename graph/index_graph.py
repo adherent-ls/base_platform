@@ -1,7 +1,7 @@
 from typing import List, Tuple, Optional
 
-from base_graph import BaseGraph
-from instance.index_param_instance import InputInstance, OutputInstance, FilterInstance
+from ..base_graph import BaseGraph
+from ..instance.index_param_instance import InputInstance, OutputInstance, FilterInstance
 
 
 class IndexGraph(BaseGraph):
