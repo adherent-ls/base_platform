@@ -40,10 +40,13 @@ class SeriesWithNameGraph(BaseGraph):
         self.ini = ini
         self.oui = oui
         for idx, item in enumerate(funcs):
-            func, ini, oui, fii = item
+            func, ini, oui = item[:3]
             ini = InputInstance(ini)
             oui = OutputInstance(oui)
-            fii = FilterInstance(fii)
+            if len(item) == 4:
+                fii = FilterInstance(item[3])
+            else:
+                fii = FilterInstance()
             self.modules[str(idx)] = NameGraph(func, ini, oui, fii)
 
     def forward(self, *data: List):
