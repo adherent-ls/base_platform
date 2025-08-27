@@ -1,18 +1,7 @@
-from enum import Enum
 from typing import List, Union
 
 from ..base_instance import BaseInstance
-
-
-class UseField(object):
-    def __init__(self, arg):
-        super().__init__()
-        self.arg = arg
-
-
-class FilterType(Enum):
-    All: str = 'All'
-    No: str = 'No'
+from ..types.param_type import FilterType, UseField
 
 
 class InputInstance(BaseInstance):
