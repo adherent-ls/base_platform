@@ -50,7 +50,7 @@ class SeriesWithIndexGraph(BaseGraph):
             self.modules[str(idx)] = IndexGraph(func, ini, oui, fii)
 
     def forward(self, *data: List):
-        data = self.ini.data_format(data)
+        data = InputInstance.data_format(data, self.ini)
         for func in self.modules:
             data = func(*data)
         results = OutputInstance.extract_data(data, self.oui)

@@ -11,9 +11,6 @@ class InputInstance(BaseInstance):
         super().__init__()
         self.names = names
 
-    def data_format(self, data):
-        return {name: item for name, item in zip(self.names, data)}
-
     def extract_data(self, data):
         if isinstance(self.names, List):
             data_item = []
@@ -27,6 +24,10 @@ class InputInstance(BaseInstance):
         else:
             raise NotImplemented
         return data_item
+
+    @staticmethod
+    def data_format(data, names):
+        return {name: item for name, item in zip(names, data)}
 
 
 class OutputInstance(BaseInstance):

@@ -11,9 +11,6 @@ class InputInstance(BaseInstance):
         super().__init__()
         self.indices = indices
 
-    def data_format(self, data):
-        return [data[index] for index in self.indices]
-
     def extract_data(self, data):
         if isinstance(self.indices, List):
             data_item = []
@@ -27,6 +24,10 @@ class InputInstance(BaseInstance):
         else:
             raise NotImplemented
         return data_item
+
+    @staticmethod
+    def data_format(data, indices):
+        return [data[index] for index in indices]
 
 
 class OutputInstance(BaseInstance):

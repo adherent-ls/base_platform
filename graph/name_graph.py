@@ -50,7 +50,7 @@ class SeriesWithNameGraph(BaseGraph):
             self.modules[str(idx)] = NameGraph(func, ini, oui, fii)
 
     def forward(self, *data: List):
-        data_dict = self.ini.data_format(data)
+        data_dict = InputInstance.data_format(data, self.ini)
         for name, func_item in self.modules.items():
             data_dict = func_item(**data_dict)
         result = OutputInstance.extract_data(data_dict, self.oui)
