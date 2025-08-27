@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Dict
 
 from ..base_instance import BaseInstance
 from ..types.param_type import FilterType, UseField
@@ -45,6 +45,20 @@ class OutputInstance(BaseInstance):
         else:
             raise NotImplemented
         return result
+
+    @staticmethod
+    def extract_data(data: Dict, names: types):
+        if names is None:
+            results = data.values()
+        elif isinstance(names, str):
+            results = data[names]
+        elif isinstance(names, List):
+            results = []
+            for i, name in enumerate(names):
+                results.append(data[name])
+        else:
+            raise NotImplemented
+        return results
 
 
 class FilterInstance(BaseInstance):

@@ -46,6 +46,20 @@ class OutputInstance(BaseInstance):
             raise NotImplemented
         return result
 
+    @staticmethod
+    def extract_data(data: List, indices: types):
+        if indices is None:
+            results = data
+        elif isinstance(indices, int):
+            results = data[indices]
+        elif isinstance(indices, List):
+            results = []
+            for i, index in enumerate(indices):
+                results.append(data[index])
+        else:
+            raise NotImplemented
+        return results
+
 
 class FilterInstance(BaseInstance):
     types = Union[FilterType, List[int]]

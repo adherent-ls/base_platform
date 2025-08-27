@@ -29,14 +29,16 @@ class NameGraph(BaseGraph):
 class SeriesWithNameGraph(BaseGraph):
     def __init__(
             self,
-            ini: InputInstance.types,
             funcs: List[Union[
                 Tuple[BaseGraph, InputInstance.types, OutputInstance.types],
                 Tuple[BaseGraph, InputInstance.types, OutputInstance.types, FilterInstance.types],
-            ]]
+            ]],
+            ini: InputInstance.types,
+            oui: OutputInstance.types = None,
     ):
         super().__init__()
         self.ini = ini
+        self.oui = oui
         for idx, item in enumerate(funcs):
             func, ini, oui, fii = item
             ini = InputInstance(ini)
@@ -48,5 +50,5 @@ class SeriesWithNameGraph(BaseGraph):
         data_dict = self.ini.data_format(data)
         for name, func_item in self.modules.items():
             data_dict = func_item(**data_dict)
-        result = list(data_dict.values())
+        result = OutputInstance.extract_data(data_dict, self.oui)
         return result

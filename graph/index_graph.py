@@ -29,14 +29,16 @@ class IndexGraph(BaseGraph):
 class SeriesWithIndexGraph(BaseGraph):
     def __init__(
             self,
-            ini: InputInstance.types,
             funcs: List[Union[
                 Tuple[BaseGraph, InputInstance.types, OutputInstance.types],
                 Tuple[BaseGraph, InputInstance.types, OutputInstance.types, FilterInstance.types],
-            ]]
+            ]],
+            ini: InputInstance.types,
+            oui: OutputInstance.types = None,
     ):
         super().__init__()
         self.ini = ini
+        self.oui = oui
         for idx, item in enumerate(funcs):
             func, ini, oui, fii = item
             ini = InputInstance(ini)
@@ -48,4 +50,5 @@ class SeriesWithIndexGraph(BaseGraph):
         data = self.ini.data_format(data)
         for func in self.modules:
             data = func(*data)
-        return data
+        results = OutputInstance.extract_data(data, self.oui)
+        return results
