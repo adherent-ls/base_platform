@@ -1,4 +1,5 @@
 from typing import List
+from .base_instance import Condition
 
 
 class BaseGraph():
@@ -11,6 +12,20 @@ class BaseGraph():
 
     def forward(self, *args, **kwargs):
         raise NotImplementedError
+
+
+class ConditionGraph(BaseGraph):
+    def __init__(self, cond: Condition, func_true, func_false):
+        super().__init__()
+        self.cond = cond
+        self.func_true = func_true
+        self.func_false = func_false
+
+    def forward(self, *data):
+        if self.cond():
+            return self.func_true(*data)
+        else:
+            return self.func_false(*data)
 
 
 class SeriesListGraph(BaseGraph):
