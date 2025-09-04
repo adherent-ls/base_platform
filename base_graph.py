@@ -1,5 +1,7 @@
 from typing import List
 
+from .base_instance import Condition
+
 
 class BaseGraph():
     def __init__(self):
