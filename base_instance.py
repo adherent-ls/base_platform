@@ -19,7 +19,7 @@ class Condition(BaseInstance):
 
 class ConvertInstance(BaseInstance):
     @staticmethod
-    def dict_to_list(data: Dict, names: Union[Tuple, List, str]):
+    def dict_to_list(data: Dict, names: Union[Tuple, List, str] = None):
         if names is None:
             results = list(data.values())
         elif isinstance(names, str):
@@ -38,7 +38,7 @@ class ConvertInstance(BaseInstance):
         return results
 
     @staticmethod
-    def list_to_dict(data: Union[Tuple, List], names: Union[Tuple, List, str]):
+    def list_to_dict(data: Union[Tuple, List], names: Union[Tuple, List, str] = None):
         if names is None:
             names = list(range(len(data)))
 

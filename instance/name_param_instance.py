@@ -6,4 +6,4 @@ input_types = List[Union[str, UseField]]
 
 output_types = Union[str, List[str]]
 
-filter_types = Union[FilterType, List[str]]
+filter_types = Union[FilterType, List[str], str]

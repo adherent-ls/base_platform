@@ -6,4 +6,4 @@ input_types = List[Union[int, UseField]]
 
 output_types = Union[int, List[int]]
 
-filter_types = Union[FilterType, List[int]]
+filter_types = Union[FilterType, List[int], int]

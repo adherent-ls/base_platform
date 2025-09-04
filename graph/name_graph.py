@@ -54,4 +54,5 @@ class SeriesWithNameGraph(BaseGraph):
         for name, func_item in self.modules.items():
             data_dict = func_item(**data_dict)
         result = ConvertInstance.dict_extract(data_dict, self.fii)
+        result = ConvertInstance.dict_to_list(result, None)
         return result
