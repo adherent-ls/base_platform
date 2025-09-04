@@ -1,6 +1,6 @@
 from typing import Union, Dict, Tuple, List
 
-from types.param_type import UseField, FilterType
+from .types.param_type import UseField, FilterType
 
 
 class BaseInstance(object):
