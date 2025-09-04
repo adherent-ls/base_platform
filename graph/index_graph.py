@@ -3,7 +3,7 @@ from typing import List, Tuple, Union
 from ..base_instance import ConvertInstance
 from ..types.base_param_type import FilterType
 from ..base_graph import BaseGraph
-from types.index_param_instance import input_types, output_types, filter_types
+from ..types.index_param_types import input_types, output_types, filter_types
 
 
 class IndexGraph(BaseGraph):
@@ -36,11 +36,11 @@ class SeriesWithIndexGraph(BaseGraph):
                 Tuple[BaseGraph, input_types, output_types, filter_types],
             ]],
             ini: input_types,
-            fii: filter_types = FilterType.All,
+            oui: output_types = None,
     ):
         super().__init__()
         self.ini = ini
-        self.fii = fii
+        self.oui = oui
         for idx, item in enumerate(funcs):
             func, ini, oui = item[:3]
             if len(item) == 4:
@@ -53,5 +53,5 @@ class SeriesWithIndexGraph(BaseGraph):
         data = ConvertInstance.list_extract(data, self.ini)
         for func in self.modules:
             data = func(*data)
-        results = ConvertInstance.list_extract(data, self.fii)
+        results = ConvertInstance.list_extract(data, self.oui)
         return results

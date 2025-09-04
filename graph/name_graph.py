@@ -3,7 +3,7 @@ from typing import List, Dict, Tuple, Union
 from ..types.base_param_type import FilterType
 from ..base_instance import ConvertInstance
 from ..base_graph import BaseGraph
-from types.name_param_instance import input_types, output_types, filter_types
+from ..types.name_param_types import input_types, output_types, filter_types
 
 
 class NameGraph(BaseGraph):
@@ -36,11 +36,11 @@ class SeriesWithNameGraph(BaseGraph):
                 Tuple[BaseGraph, input_types, output_types, filter_types],
             ]],
             ini: input_types,
-            fii: filter_types = FilterType.All,
+            oui: output_types = None,
     ):
         super().__init__()
         self.ini = ini
-        self.fii = fii
+        self.oui = oui
         for idx, item in enumerate(funcs):
             func, ini, oui = item[:3]
             if len(item) == 4:
@@ -53,5 +53,5 @@ class SeriesWithNameGraph(BaseGraph):
         data_dict = ConvertInstance.list_to_dict(data, self.ini)
         for name, func_item in self.modules.items():
             data_dict = func_item(**data_dict)
-        result = ConvertInstance.dict_to_list(data_dict, self.fii)
+        result = ConvertInstance.dict_to_list(data_dict, self.oui)
         return result

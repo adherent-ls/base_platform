@@ -75,8 +75,10 @@ class ConvertInstance(BaseInstance):
         return data
 
     @staticmethod
-    def dict_extract(data: Dict, names: Union[Tuple, List, FilterType]):
-        if names == FilterType.All:
+    def dict_extract(data: Dict, names: Union[Tuple, List, FilterType, str]):
+        if isinstance(names, str):
+            result = data[names]
+        elif names == FilterType.All:
             result = data
         elif names == FilterType.No:
             result = {}
@@ -89,8 +91,10 @@ class ConvertInstance(BaseInstance):
         return result
 
     @staticmethod
-    def list_extract(data: Union[Tuple, List], indices: Union[Tuple, List, FilterType]):
-        if indices == FilterType.All:
+    def list_extract(data: Union[Tuple, List], indices: Union[Tuple, List, FilterType, int]):
+        if isinstance(indices, int):
+            result = data[indices]
+        elif indices == FilterType.All:
             result = list(data)
         elif indices == FilterType.No:
             result = []
