@@ -1,16 +1,18 @@
 from typing import List, Dict, Tuple, Union
 
+from ..types.param_type import FilterType
+from ..base_instance import ConvertInstance
 from ..base_graph import BaseGraph
-from ..instance.name_param_instance import InputInstance, OutputInstance, FilterInstance
+from ..instance.name_param_instance import input_types, output_types, filter_types
 
 
 class NameGraph(BaseGraph):
     def __init__(
             self,
             func: BaseGraph,
-            ini: InputInstance = InputInstance(),
-            oui: OutputInstance = OutputInstance(),
-            fii: FilterInstance = FilterInstance()
+            ini: input_types,
+            oui: output_types,
+            fii: filter_types
     ):
         super().__init__()
         self.func = func
@@ -19,10 +21,10 @@ class NameGraph(BaseGraph):
         self.fii = fii
 
     def forward(self, **data: Dict):
-        input_data = self.ini.extract_data(data)
+        input_data = ConvertInstance.dict_to_list(data, self.ini)
         func_data = self.func(*input_data)
-        output_data = self.oui.update_data(data, func_data)
-        filter_data = self.fii.filter_data(output_data)
+        output_data = ConvertInstance.dict_update(data, func_data, self.oui)
+        filter_data = ConvertInstance.dict_extract(output_data, self.fii)
         return filter_data
 
 
@@ -30,28 +32,26 @@ class SeriesWithNameGraph(BaseGraph):
     def __init__(
             self,
             funcs: List[Union[
-                Tuple[BaseGraph, InputInstance.types, OutputInstance.types],
-                Tuple[BaseGraph, InputInstance.types, OutputInstance.types, FilterInstance.types],
+                Tuple[BaseGraph, input_types, output_types],
+                Tuple[BaseGraph, input_types, output_types, filter_types],
             ]],
-            ini: InputInstance.types,
-            oui: OutputInstance.types = None,
+            ini: input_types,
+            fii: filter_types = FilterType.All,
     ):
         super().__init__()
         self.ini = ini
-        self.oui = oui
+        self.fii = fii
         for idx, item in enumerate(funcs):
             func, ini, oui = item[:3]
-            ini = InputInstance(ini)
-            oui = OutputInstance(oui)
             if len(item) == 4:
-                fii = FilterInstance(item[3])
+                fii = item[3]
             else:
-                fii = FilterInstance()
+                fii = FilterType.All
             self.modules[str(idx)] = NameGraph(func, ini, oui, fii)
 
     def forward(self, *data: List):
-        data_dict = InputInstance.data_format(data, self.ini)
+        data_dict = ConvertInstance.list_to_dict(data, self.ini)
         for name, func_item in self.modules.items():
             data_dict = func_item(**data_dict)
-        result = OutputInstance.extract_data(data_dict, self.oui)
+        result = ConvertInstance.dict_extract(data_dict, self.fii)
         return result

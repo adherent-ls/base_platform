@@ -1,16 +1,18 @@
 from typing import List, Tuple, Optional, Union
 
+from ..base_instance import ConvertInstance
+from ..types.param_type import FilterType
 from ..base_graph import BaseGraph
-from ..instance.index_param_instance import InputInstance, OutputInstance, FilterInstance
+from ..instance.index_param_instance import input_types, output_types, filter_types
 
 
 class IndexGraph(BaseGraph):
     def __init__(
             self,
             func: BaseGraph,
-            ini: InputInstance = InputInstance(),
-            oui: OutputInstance = OutputInstance(),
-            fii: FilterInstance = FilterInstance()
+            ini: input_types,
+            oui: output_types,
+            fii: filter_types
     ):
         super().__init__()
         self.func = func
@@ -19,10 +21,10 @@ class IndexGraph(BaseGraph):
         self.fii = fii
 
     def forward(self, *data: List):
-        input_data = self.ini.extract_data(data)
+        input_data = ConvertInstance.list_extract(data, self.ini)
         func_data = self.func(*input_data)
-        output_data = self.oui.update_data(data, func_data)
-        filter_data = self.fii.filter_data(output_data)
+        output_data = ConvertInstance.list_update(data, func_data, self.oui)
+        filter_data = ConvertInstance.list_extract(output_data, self.fii)
         return filter_data
 
 
@@ -30,28 +32,26 @@ class SeriesWithIndexGraph(BaseGraph):
     def __init__(
             self,
             funcs: List[Union[
-                Tuple[BaseGraph, InputInstance.types, OutputInstance.types],
-                Tuple[BaseGraph, InputInstance.types, OutputInstance.types, FilterInstance.types],
+                Tuple[BaseGraph, input_types, output_types],
+                Tuple[BaseGraph, input_types, output_types, filter_types],
             ]],
-            ini: InputInstance.types,
-            oui: OutputInstance.types = None,
+            ini: input_types,
+            fii: filter_types = FilterType.All,
     ):
         super().__init__()
         self.ini = ini
-        self.oui = oui
+        self.fii = fii
         for idx, item in enumerate(funcs):
             func, ini, oui = item[:3]
-            ini = InputInstance(ini)
-            oui = OutputInstance(oui)
             if len(item) == 4:
-                fii = FilterInstance(item[3])
+                fii = item[3]
             else:
-                fii = FilterInstance()
+                fii = FilterType.All
             self.modules[str(idx)] = IndexGraph(func, ini, oui, fii)
 
     def forward(self, *data: List):
-        data = InputInstance.data_format(data, self.ini)
+        data = ConvertInstance.list_extract(data, self.ini)
         for func in self.modules:
             data = func(*data)
-        results = OutputInstance.extract_data(data, self.oui)
+        results = ConvertInstance.list_extract(data, self.fii)
         return results
