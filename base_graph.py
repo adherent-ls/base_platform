@@ -1,5 +1,4 @@
 from typing import List
-
 from .base_instance import Condition
 
 
