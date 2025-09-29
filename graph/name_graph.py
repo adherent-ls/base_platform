@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Union
+from typing import List, Dict, Tuple, Union, Any
 
 from ..types.base_param_type import FilterType
 from ..base_instance import ConvertInstance
@@ -32,8 +32,8 @@ class SeriesWithNameGraph(BaseGraph):
     def __init__(
             self,
             funcs: List[Union[
-                Tuple[BaseGraph, input_types, output_types],
-                Tuple[BaseGraph, input_types, output_types, filter_types],
+                Tuple[Union[BaseGraph, Any], input_types, output_types],
+                Tuple[Union[BaseGraph, Any], input_types, output_types, filter_types],
             ]],
             ini: input_types,
             oui: output_types = None,
