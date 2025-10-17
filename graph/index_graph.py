@@ -3,13 +3,13 @@ from typing import List, Tuple, Union
 from ..base_instance import ConvertInstance
 from ..types.base_param_type import FilterType
 from ..base_graph import BaseGraph
-from ..types.index_param_types import input_types, output_types, filter_types
+from ..types.index_param_types import input_types, output_types, filter_types, graph_types
 
 
 class IndexGraph(BaseGraph):
     def __init__(
             self,
-            func: BaseGraph,
+            func: graph_types,
             ini: input_types,
             oui: output_types,
             fii: filter_types
@@ -32,8 +32,8 @@ class SeriesWithIndexGraph(BaseGraph):
     def __init__(
             self,
             funcs: List[Union[
-                Tuple[BaseGraph, input_types, output_types],
-                Tuple[BaseGraph, input_types, output_types, filter_types],
+                Tuple[graph_types, input_types, output_types],
+                Tuple[graph_types, input_types, output_types, filter_types],
             ]],
             ini: input_types,
             oui: output_types = None,

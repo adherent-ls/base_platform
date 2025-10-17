@@ -64,7 +64,7 @@ class ConvertInstance(BaseInstance):
         return data
 
     @staticmethod
-    def list_update(data: List, output: Union[Tuple, List], indices: Union[Tuple, List, int]):
+    def list_update(data: Union[List, Tuple], output: Union[Tuple, List], indices: Union[Tuple, List, int]):
         if isinstance(indices, int):
             data[indices] = output
         elif isinstance(indices, List) or isinstance(indices, Tuple):
